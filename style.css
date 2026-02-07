@@ -1,26 +1,189 @@
-/* style.css */
+/* style.css - 洗練版 */
+
+:root {
+  --primary: #6366f1;       /* indigo-500 */
+  --primary-dark: #4f46e5;
+  --success: #10b981;       /* green-500 */
+  --danger: #ef4444;
+  --bg: #f8fafc;
+  --card: #ffffff;
+  --text: #1e293b;
+  --text-light: #64748b;
+  --border: #e2e8f0;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0f172a;
+    --card: #1e293b;
+    --text: #f1f5f9;
+    --text-light: #94a3b8;
+    --border: #334155;
+  }
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 body {
-  font-family: sans-serif;
+  font-family: system-ui, -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  padding: 1.5rem 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  color: var(--primary);
   text-align: center;
 }
 
-.choiceBtn {
-  display: block;
-  margin: 10px auto;
-  padding: 12px;
-  width: 220px;
-  font-size: 18px;
+#timer {
+  font-size: 1.1rem;
+  color: var(--text-light);
+  margin-bottom: 0.5rem;
+}
+
+#progressText {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
 }
 
 #barBox {
-  width: 300px;
-  height: 20px;
-  border: 1px solid #333;
-  margin: 10px auto;
+  width: 100%;
+  max-width: 400px;
+  height: 12px;
+  background: var(--border);
+  border-radius: 999px;
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 #bar {
   height: 100%;
   width: 0%;
-  background: green;
+  background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+  transition: width 0.6s ease;
+}
+
+#warningImg {
+  width: 180px;
+  height: auto;
+  margin: 1rem 0 2rem;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+  transition: transform 0.3s ease;
+}
+
+#warningImg:hover {
+  transform: scale(1.05);
+}
+
+hr {
+  width: 80%;
+  max-width: 300px;
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 1.5rem 0;
+}
+
+#question {
+  font-size: 1.5rem;
+  font-weight: 600;
+  text-align: center;
+  margin: 1rem 0 2rem;
+  padding: 0 1rem;
+  min-height: 3.5rem;
+  transition: color 0.4s, transform 0.3s;
+}
+
+#choices {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+  max-width: 360px;
+}
+
+.choiceBtn {
+  background: var(--card);
+  border: 2px solid var(--border);
+  border-radius: 16px;
+  padding: 1.2rem 1.5rem;
+  font-size: 1.1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.08);
+  text-align: center;
+}
+
+.choiceBtn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.12);
+  border-color: var(--primary);
+}
+
+.choiceBtn:disabled {
+  opacity: 0.6;
+  transform: none;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+/* 正解・不正解アニメーション用クラス（JSで追加） */
+.correct {
+  animation: correctAnim 0.6s ease;
+  border-color: var(--success) !important;
+  background: rgba(16, 185, 129, 0.1);
+}
+
+.wrong {
+  animation: wrongAnim 0.5s ease;
+  border-color: var(--danger) !important;
+  background: rgba(239, 68, 68, 0.1);
+}
+
+@keyframes correctAnim {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+  100% { transform: scale(1); }
+}
+
+@keyframes wrongAnim {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-8px); }
+  40% { transform: translateX(8px); }
+  60% { transform: translateX(-6px); }
+  80% { transform: translateX(6px); }
+}
+
+/* 達成時用の特別スタイル（必要ならJSでbodyにクラス追加） */
+.achieved #question {
+  font-size: 1.8rem;
+  color: #fbbf24;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+/* モバイル調整 */
+@media (min-width: 500px) {
+  body { padding: 2.5rem 1.5rem; }
+  h1 { font-size: 2.5rem; }
+  #question { font-size: 1.8rem; }
 }

@@ -70,9 +70,11 @@ function answer(selected) {
       result.innerText = "🎉 30問達成！おめでとう！";
       result.style.color = "#FFD700"; // 金色
       // 必要なら音やアニメーションをここで追加可能
+      result.classList.add('correct');
     } else if (solved > DAILY_TARGET) {
       result.innerText = "⭕ 正解！（今日の目標クリア済み）";
       result.style.color = "green";
+      result.classList.add('wrong');
     } else {
       result.innerText = "⭕ 正解！";
       result.style.color = "green";
@@ -90,6 +92,8 @@ function answer(selected) {
 
   setTimeout(() => {
     result.style.color = "black";
+    result.style.color = "var(--text)";
+    result.classList.remove('correct', 'wrong');
     result.innerText = current.q;
     answering = false;
     next();
