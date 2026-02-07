@@ -2,7 +2,7 @@ let words = [];
 let current = null;
 let answering = false;
 let totalAttempts = 0;  // 総回答回数（正解＋不正解）
-const DAILY_TARGET = 3;  // 本番では30に変更
+const DAILY_TARGET = 30;  // 本番では30に変更
 
 let characters = [];
 let gachaTickets = 0;
