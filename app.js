@@ -93,7 +93,7 @@ function answer(selected) {
   setTimeout(() => {
     result.style.color = "black";
     result.style.color = "var(--text)";
-    result.classList.remove('correct', 'wrong');
+    result.classList.remove('correct', 'wrong', 'bonus');
     result.innerText = current.q;
     answering = false;
     next();
