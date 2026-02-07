@@ -181,9 +181,15 @@ hr {
 }
 
 .bonus {
-  animation: correctAnim 0.6s ease;
-  border-color: var(--success) !important;
-  background: rgba(16, 185, 129, 0.1);
+  background: rgba(16, 185, 129, 0.25);   /* 少し濃いめの緑半透明 */
+  border-color: #059669 !important;       /* 濃い緑 */
+  box-shadow: 0 0 12px rgba(16, 185, 129, 0.4);
+  animation: bonusPulse 1.2s ease-in-out;
+}
+
+@keyframes bonusPulse {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.04); }
 }
 
 @keyframes correctAnim {

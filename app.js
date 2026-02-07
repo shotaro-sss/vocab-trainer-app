@@ -62,19 +62,22 @@ function answer(selected) {
   const result = document.getElementById("question");
   const isCorrect = selected === current.a;
 
+  // まず既存のフィードバッククラスをすべてクリア（安全策）
+  result.classList.remove('correct', 'wrong', 'bonus');
+
   if (isCorrect) {
     solved++;
     saveCount(solved);
 
+    result.classList.add('correct');  // 基本の正解アニメは全員に
+
     if (solved === DAILY_TARGET) {
-      result.innerText = "🎉 30問達成！おめでとう！";
+      result.innerText = "🎉 目標達成！おめでとう！";
       result.style.color = "#FFD700"; // 金色
-      // 必要なら音やアニメーションをここで追加可能
-      result.classList.add('correct');
     } else if (solved > DAILY_TARGET) {
       result.innerText = "⭕ 正解！🎉";
-      result.style.color = "green";
-      result.classList.add('bonus');
+      result.style.color = "#10b981"; // success緑（CSS変数でも可）
+      result.classList.add('bonus');   // オーバー専用クラス
     } else {
       result.innerText = "⭕ 正解！";
       result.style.color = "green";
@@ -82,6 +85,7 @@ function answer(selected) {
   } else {
     result.innerText = `❌ 不正解 → ${current.a}`;
     result.style.color = "red";
+    result.classList.add('wrong');
   }
 
   // ボタン無効化
@@ -91,13 +95,16 @@ function answer(selected) {
   updateWarningImage();
 
   setTimeout(() => {
-    result.style.color = "black";
+    // スタイルとクラスを完全にリセット
     result.style.color = "var(--text)";
     result.classList.remove('correct', 'wrong', 'bonus');
+    
+    // 次の問題文に戻す
     result.innerText = current.q;
+    
     answering = false;
     next();
-  }, 1400);  // 達成メッセージが見やすいよう少し長めに
+  }, 1400);
 }
 
 function updateBar() {
