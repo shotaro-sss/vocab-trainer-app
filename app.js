@@ -195,7 +195,7 @@ function updateGachaButton() {
   if (!btn) {
     btn = document.createElement("button");
     btn.id = "gachaButton";
-    btn.innerHTML = `<img src="images/complete.png" alt="ガチャを引く！">`;
+    btn.innerHTML = `<img src="images/complete.png" alt="RESULT">`;
     btn.onclick = openGacha;
     imgPlaceholder.insertAdjacentElement("afterend", btn);
   }
