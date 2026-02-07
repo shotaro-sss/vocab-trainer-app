@@ -224,3 +224,86 @@ hr {
   h1 { font-size: 2.5rem; }
   #question { font-size: 1.8rem; }
 }
+
+/* モーダル */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.75);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-content {
+  background: white;
+  padding: 2rem 1.5rem;
+  border-radius: 24px;
+  width: 92%;
+  max-width: 420px;
+  text-align: center;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+}
+
+#gachaResult {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin: 1.5rem 0;
+}
+
+.gacha-card {
+  background: #f8fafc;
+  border-radius: 16px;
+  padding: 12px;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+  transition: transform 0.4s;
+}
+
+.gacha-card img {
+  width: 100%;
+  border-radius: 12px;
+}
+
+.gacha-card .name {
+  margin-top: 8px;
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+.rare { border: 3px solid #a3a3a3; }
+.super { border: 3px solid #3b82f6; }
+.hyper { border: 3px solid #8b5cf6; }
+.ultra { border: 3px solid #ec4899; }
+.legend { 
+  border: 3px solid #fbbf24; 
+  box-shadow: 0 0 20px #fbbf24;
+  animation: legendGlow 1.5s infinite alternate;
+}
+
+@keyframes legendGlow {
+  from { box-shadow: 0 0 15px #fbbf24; }
+  to   { box-shadow: 0 0 30px #f59e0b; }
+}
+
+/* ガチャボタン（complete.pngの代わり） */
+#gachaButton {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  margin: 1rem 0 2rem;
+}
+
+#gachaButton img {
+  width: 200px;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(251, 191, 36, 0.4);
+  transition: transform 0.3s;
+}
+
+#gachaButton:hover img {
+  transform: scale(1.08) rotate(3deg);
+}

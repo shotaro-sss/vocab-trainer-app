@@ -1,3 +1,83 @@
+// ... 既存のコードの上部に追加 ...
+let characters = [];
+
+// ガチャ可能チケット数
+let gachaTickets = 0;
+
+// characters.json をロード（初回fetchと一緒に）
+fetch("characters.json")
+  .then(r => r.json())
+  .then(data => { characters = data; })
+  .catch(() => console.warn("characters.json がありません"));
+
+// ガチャボタン（complete.pngの場所をボタンに変更）
+function updateGachaButton() {
+  const container = document.getElementById("warningImg").parentElement; // 適宜調整
+  let btn = document.getElementById("gachaButton");
+
+  const canGacha = solved >= DAILY_TARGET && 
+                   (solved - DAILY_TARGET) % 10 === 0 || 
+                   (solved === DAILY_TARGET);
+
+  if (canGacha) {
+    if (!btn) {
+      btn = document.createElement("button");
+      btn.id = "gachaButton";
+      btn.innerHTML = `<img src="images/complete.png" alt="ガチャを引く">`;
+      btn.onclick = openGacha;
+      document.getElementById("warningImg").replaceWith(btn);
+    }
+    btn.style.display = "block";
+  } else if (btn) {
+    btn.style.display = "none";
+  }
+}
+
+// ガチャ画面を開く
+function openGacha() {
+  if (gachaTickets <= 0) return;
+  gachaTickets--;
+
+  const modal = document.getElementById("gachaModal");
+  const resultArea = document.getElementById("gachaResult");
+  resultArea.innerHTML = "";
+
+  for (let i = 0; i < 5; i++) {
+    const card = drawOneCharacter();
+    const div = document.createElement("div");
+    div.className = `gacha-card ${card.rarity}`;
+    div.innerHTML = `
+      <img src="${card.image}" alt="${card.name}">
+      <div class="name">${card.name}</div>
+    `;
+    resultArea.appendChild(div);
+  }
+
+  modal.style.display = "flex";
+}
+
+// 1枚抽選
+function drawOneCharacter() {
+  const rand = Math.random() * 100;
+  let rarity;
+  if (rand < 50) rarity = "rare";
+  else if (rand < 78) rarity = "super";
+  else if (rand < 93) rarity = "hyper";
+  else if (rand < 98) rarity = "ultra";
+  else rarity = "legend";
+
+  const candidates = characters.filter(c => c.rarity === rarity);
+  return candidates[Math.floor(Math.random() * candidates.length)];
+}
+
+// モーダル閉じる
+document.getElementById("closeGachaBtn").onclick = () => {
+  document.getElementById("gachaModal").style.display = "none";
+};
+
+// updateBar() と updateWarningImage() の最後に追加
+updateGachaButton();
+
 let words = [];
 let current = null;
 let answering = false;
