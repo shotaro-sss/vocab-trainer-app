@@ -1,6 +1,7 @@
 let words = [];
 let current = null;
 let answering = false;
+let totalAttempts = 0;  // 総回答回数（正解＋不正解）
 const DAILY_TARGET = 3;  // 本番では30に変更
 
 let characters = [];
@@ -82,6 +83,7 @@ function next() {
 function answer(selected) {
   if (answering) return;
   answering = true;
+  totalAttempts++;  // ← 毎回答えるたびにカウントアップ
 
   const result = document.getElementById("question");
   const isCorrect = selected === current.a;
@@ -115,8 +117,10 @@ function answer(selected) {
         audioComplete.currentTime = 0;
         audioComplete.play().catch(e => console.log("達成音エラー:", e));
         }
+        const accuracy = totalAttempts > 0 ? ((solved / totalAttempts) * 100).toFixed(1) : 0;
         result.innerText = "🎉 目標達成！おめでとう！";
         result.style.color = "#FFD700";
+        result.style.whiteSpace = "pre-line";  // 改行を有効にする
     } else if (solved > DAILY_TARGET) {
         result.innerText = "⭕ 正解！🎉";
         result.style.color = "#10b981";
@@ -136,19 +140,20 @@ function answer(selected) {
         result.classList.add('wrong');
     }
 
-  document.querySelectorAll(".choiceBtn").forEach(b => b.disabled = true);
+    document.querySelectorAll(".choiceBtn").forEach(b => b.disabled = true);
 
-  updateBar();
-  updateWarningImage();
-  updateGachaButton();
+    updateBar();
+    updateWarningImage();
+    updateGachaButton();
 
-  setTimeout(() => {
-    result.style.color = "var(--text)";
-    result.classList.remove('correct', 'wrong', 'bonus');
-    result.innerText = current.q;
-    answering = false;
-    next();
-  }, 1400);
+    setTimeout(() => {
+        result.style.color = "var(--text)";
+        result.style.whiteSpace = "normal";  // 元に戻す
+        result.classList.remove('correct', 'wrong', 'bonus');
+        result.innerText = current.q;
+        answering = false;
+        next();
+    }, 1400);
 }
 
 function updateBar() {
