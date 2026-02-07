@@ -117,9 +117,7 @@ function answer(selected) {
         audioComplete.currentTime = 0;
         audioComplete.play().catch(e => console.log("達成音エラー:", e));
         }
-        const accuracy = totalAttempts > 0 ? ((solved / totalAttempts) * 100).toFixed(1) : 0;
-        result.innerText = "🎉 目標達成！おめでとう！";
-        result.style.color = "#FFD700";
+        const accuracy = totalAttempts > 0 ? Math.round((solved / totalAttempts) * 100) : 0;        result.innerText = `🎉 目標達成！おめでとう！\n正答率 ${accuracy}%！`;        result.style.color = "#FFD700";
         result.style.whiteSpace = "pre-line";  // 改行を有効にする
     } else if (solved > DAILY_TARGET) {
         result.innerText = "⭕ 正解！🎉";
