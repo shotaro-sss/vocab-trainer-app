@@ -154,6 +154,7 @@ function answer(selected) {
         result.innerText = `❌ ${current.q} → ${current.a}`;
         result.style.color = "red";
         result.classList.add('wrong');
+        timeoutDuration = 3000;  // ← 誤答時は3秒表示
     }
 
     document.querySelectorAll(".choiceBtn").forEach(b => b.disabled = true);
