@@ -212,19 +212,80 @@ function updateWarningImage() {
 
 // 他の関数（updateBar, secondsToMidnight, updateTimer など）は変更なし
 
-// 初回ロード
+// 初回ロード部分を安全に強化
 fetch("words.json")
-  .then(r => r.json())
+  .then(r => {
+    if (!r.ok) throw new Error(`HTTP error! status: ${r.status}`);
+    return r.json();
+  })
   .then(data => {
     words = data;
+    if (words.length === 0) {
+      document.getElementById("question").innerText = "単語データが空です";
+      return;
+    }
     next();
     updateTimer();
     updateWarningImage();
-    updateGachaButton();  // 重要：初回でボタン状態をセット
+    updateGachaButton();
   })
   .catch(err => {
-    console.error("Failed to load words.json", err);
-    document.getElementById("question").innerText = "単語データの読み込みに失敗しました";
+    console.error("words.json 読み込み失敗:", err);
+    document.getElementById("question").innerText = "単語データを読み込めませんでした\n（words.jsonを確認してください）";
+    // ここで最低限のUIを保つためにダミー問題を表示（任意）
+    document.getElementById("choices").innerHTML = "<p>データが読み込めないため、問題が出せません</p>";
+    updateBar();              // 進捗は表示
+    updateWarningImage();     // 時間帯画像は表示
+    updateGachaButton();      // ガチャボタンは条件次第
   });
 
-setInterval(updateTimer, 1000);
+// updateWarningImage() をさらに安全に（要素が存在するかチェック）
+function updateWarningImage() {
+  const imgElement = document.getElementById("warningImg");
+  if (!imgElement) return;  // 既にガチャボタンに置き換わっていたら何もしない
+
+  if (solved >= DAILY_TARGET) {
+    return;  // 達成後はガチャボタン担当なのでスキップ
+  }
+
+  const hour = new Date().getHours();
+  if (hour === lastWarningHour) return;
+
+  let imgPath = "";
+  if      (hour >= 18) imgPath = "images/24h.png";
+  else if (hour >= 12) imgPath = "images/18h.png";
+  else if (hour >=  6) imgPath = "images/12h.png";
+  else                 imgPath = "images/6h.png";
+
+  if (imgElement.src.endsWith(imgPath)) return;
+
+  imgElement.src = imgPath;
+  lastWarningHour = hour;
+}
+
+// updateGachaButton() をさらに頑丈に
+function updateGachaButton() {
+  const placeholder = document.getElementById("warningImg");
+  if (!placeholder) {
+    // 既に置き換わっている場合 → 既存ボタンの状態だけ更新
+    const existingBtn = document.getElementById("gachaButton");
+    if (existingBtn) {
+      existingBtn.disabled = gachaTickets <= 0;
+      existingBtn.style.opacity = gachaTickets > 0 ? "1" : "0.6";
+    }
+    return;
+  }
+
+  if (solved >= DAILY_TARGET) {
+    let btn = document.getElementById("gachaButton");
+    if (!btn) {
+      btn = document.createElement("button");
+      btn.id = "gachaButton";
+      btn.innerHTML = `<img src="images/complete.png" alt="ガチャを引く！">`;
+      btn.onclick = openGacha;
+      placeholder.replaceWith(btn);
+    }
+    btn.disabled = gachaTickets <= 0;
+    btn.style.opacity = gachaTickets > 0 ? "1" : "0.6";
+  }
+}
