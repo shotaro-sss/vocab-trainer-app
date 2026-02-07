@@ -54,8 +54,23 @@ fetch("words.json")
   });
 
 function next() {
-  current = words[Math.floor(Math.random() * words.length)];
-  document.getElementById("question").innerText = current.q;
+    // 出題範囲に重みをつける
+    let selectedIndex;
+    const rand = Math.random() * 100;  // 0〜100の乱数
+    if (rand < 20) {
+        // 1〜200 の範囲（20%）
+        selectedIndex = Math.floor(Math.random() * 200);          // 0〜199 → id 1〜200
+    } else if (rand < 50) {  // 20% + 30% = 50%まで
+        // 201〜300 の範囲（30%）
+        selectedIndex = 200 + Math.floor(Math.random() * 100);    // 200〜299 → id 201〜300
+    } else {
+        // 301以降（50%）
+        const remaining = words.length - 300;
+        selectedIndex = 300 + Math.floor(Math.random() * remaining);  // 300〜最後
+    }
+    current = words[selectedIndex];
+
+    document.getElementById("question").innerText = current.q;
 
   let choices = [current.a];
   const others = words.filter(w => w.a !== current.a);
