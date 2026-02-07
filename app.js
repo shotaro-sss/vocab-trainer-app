@@ -90,6 +90,8 @@ function answer(selected) {
 
   result.classList.remove('correct', 'wrong', 'bonus');
 
+  let timeoutDuration = 1400;  // デフォルトの待ち時間
+
   if (isCorrect) {
     const oldSolved = solved;
     solved++;
@@ -119,6 +121,7 @@ function answer(selected) {
         }
         const accuracy = totalAttempts > 0 ? Math.round((solved / totalAttempts) * 100) : 0;        result.innerText = `🎉 目標達成！おめでとう！\n正答率 ${accuracy}%！`;        result.style.color = "#FFD700";
         result.style.whiteSpace = "pre-line";  // 改行を有効にする
+        timeoutDuration = 3000;  // ← 達成時は3秒表示
     } else if (solved > DAILY_TARGET) {
         result.innerText = "⭕ 正解！🎉";
         result.style.color = "#10b981";
@@ -151,7 +154,7 @@ function answer(selected) {
         result.innerText = current.q;
         answering = false;
         next();
-    }, 1400);
+    }, timeoutDuration);
 }
 
 function updateBar() {
