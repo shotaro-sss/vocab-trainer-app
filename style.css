@@ -70,11 +70,36 @@ h1 {
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
+#progressText {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  transition: all 0.4s ease;
+}
+
+#progressText.over-achieved {
+  font-size: 1.45rem;              /* 少し大きく */
+  font-weight: 800;                /* 太字 */
+  color: #fbbf24;                  /* 金色・達成感のある色 */
+  text-shadow: 0 1px 3px rgba(251, 191, 36, 0.4); /* 軽い光沢 */
+  animation: glow 2s infinite alternate;
+}
+
+@keyframes glow {
+  from { text-shadow: 0 0 5px rgba(251, 191, 36, 0.5); }
+  to   { text-shadow: 0 0 15px rgba(251, 191, 36, 0.9); }
+}
+
 #bar {
   height: 100%;
   width: 0%;
   background: linear-gradient(90deg, var(--primary), var(--primary-dark));
   transition: width 0.6s ease;
+}
+
+#bar.bar-over {
+  background: linear-gradient(90deg, #fbbf24, #f59e0b); /* 金→オレンジ系グラデ */
+  box-shadow: 0 0 12px rgba(251, 191, 36, 0.6);
 }
 
 #warningImg {

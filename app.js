@@ -101,9 +101,21 @@ function answer(selected) {
 }
 
 function updateBar() {
-    const pct = Math.min(100, (solved / DAILY_TARGET) * 100);
-    document.getElementById("bar").style.width = `${pct}%`;
-    document.getElementById("progressText").innerText = `${solved} / ${DAILY_TARGET}`;
+  const pct = Math.min(100, (solved / DAILY_TARGET) * 100); // 100%で止まる
+  const bar = document.getElementById("bar");
+  bar.style.width = `${pct}%`;
+
+  const progressText = document.getElementById("progressText");
+  progressText.innerText = `${solved} / ${DAILY_TARGET}`;
+
+  // オーバー時の特別クラスを適用
+  if (solved >= DAILY_TARGET) {
+    progressText.classList.add("over-achieved");
+    bar.classList.add("bar-over");
+  } else {
+    progressText.classList.remove("over-achieved");
+    bar.classList.remove("bar-over");
+  }
 }
 
 
