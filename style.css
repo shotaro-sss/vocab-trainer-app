@@ -1,0 +1,12 @@
+body {
+  font-family: sans-serif;
+  text-align: center;
+}
+
+.choiceBtn {
+  display: block;
+  margin: 10px auto;
+  padding: 12px;
+  width: 220px;
+  font-size: 18px;
+}
