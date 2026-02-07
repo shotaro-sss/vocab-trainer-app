@@ -1,3 +1,4 @@
+/* style.css */
 body {
   font-family: sans-serif;
   text-align: center;
@@ -9,4 +10,17 @@ body {
   padding: 12px;
   width: 220px;
   font-size: 18px;
+}
+
+#barBox {
+  width: 300px;
+  height: 20px;
+  border: 1px solid #333;
+  margin: 10px auto;
+}
+
+#bar {
+  height: 100%;
+  width: 0%;
+  background: green;
 }

@@ -1,34 +1,35 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
-<meta charset="UTF-8">
-<title>Vocab Trainer</title>
-
-<link rel="manifest" href="manifest.json">
-<link rel="stylesheet" href="style.css">
-
-<script>
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('sw.js');
-  });
-}
-</script>
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vocab Trainer</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="style.css">
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+          .then(reg => console.log("Service Worker registered", reg))
+          .catch(err => console.error("Service Worker registration failed", err));
+      });
+    }
+  </script>
 </head>
-
 <body>
+  <h1>Vocab Trainer</h1>
 
-<h1>Vocab Trainer</h1>
+  <div id="timer">残り時間 計算中...</div>
+  <div id="progressText">0 / 30</div>
+  <div id="barBox">
+    <div id="bar"></div>
+  </div>
+  <img id="warningImg" width="200" alt="残り時間警告">
 
-<div id="progress"></div>
-
-<div id="card">
+  <hr>
   <h2 id="question">Loading...</h2>
   <div id="choices"></div>
-</div>
 
-<script src="app.js"></script>
-
+  <script src="app.js"></script>
 </body>
 </html>
