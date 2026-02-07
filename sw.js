@@ -7,12 +7,23 @@ const urlsToCache = [
   '/style.css',
   '/manifest.json',
   '/words.json',
+  '/characters.json',
   '/images/6h.png',
   '/images/12h.png',
   '/images/18h.png',
   '/images/24h.png',
-  '/images/icon.png'
-  // 必要に応じて他の画像・ファイルを追加
+  '/images/complete.png',
+  '/images/icon.png',
+  // キャラ画像（全部入れるのが理想。最低限以下）
+  '/images/characters/r1.png',
+  '/images/characters/r2.png',
+  '/images/characters/s1.png',
+  '/images/characters/s2.png',
+  '/images/characters/h1.png',
+  '/images/characters/h2.png',
+  '/images/characters/u1.png',
+  '/images/characters/u2.png',
+  '/images/characters/l1.png'
 ];
 
 self.addEventListener('install', event => {

@@ -169,53 +169,42 @@ function updateTimer() {
 let lastWarningHour = -1;
 
 function updateWarningImage() {
-  const placeholder = document.getElementById("warningImg");
-
-  if (solved < DAILY_TARGET) {
+  const img = document.getElementById("warningImg");
+  if (solved >= DAILY_TARGET) {
+    img.style.display = "none";
+  } else {
     const hour = new Date().getHours();
     if (hour === lastWarningHour) return;
-
-    let imgPath = "";
-    if (hour >= 18) imgPath = "images/24h.png";
-    else if (hour >= 12) imgPath = "images/18h.png";
-    else if (hour >= 6) imgPath = "images/12h.png";
-    else imgPath = "images/6h.png";
-
-    placeholder.src = imgPath;
-    placeholder.style.display = "block";
+    let path = hour >= 18 ? "24h" : hour >= 12 ? "18h" : hour >= 6 ? "12h" : "6h";
+    img.src = `images/${path}.png`;
+    img.style.display = "block";
     lastWarningHour = hour;
-
-    const gachaBtn = document.getElementById("gachaButton");
-    if (gachaBtn) gachaBtn.style.display = "none";
-  } else {
-    placeholder.style.display = "none";
-
-    let btn = document.getElementById("gachaButton");
-    if (!btn) {
-      btn = document.createElement("button");
-      btn.id = "gachaButton";
-      btn.innerHTML = `<img src="images/complete.png" alt="ガチャを引く！">`;
-      btn.onclick = openGacha;
-      placeholder.insertAdjacentElement("afterend", btn);
-    }
-    btn.style.display = "block";
   }
 }
 
 function updateGachaButton() {
-  // チケットがあるかでボタンの有効/無効を切り替え（視覚的に）
-  const btn = document.getElementById("gachaButton");
-  if (btn) {
-    if (gachaTickets > 0) {
-      btn.disabled = false;
-      btn.style.opacity = "1";
-      btn.style.cursor = "pointer";
-    } else {
-      btn.disabled = true;
-      btn.style.opacity = "0.5";
-      btn.style.cursor = "not-allowed";
-    }
+  const imgPlaceholder = document.getElementById("warningImg");
+  let btn = document.getElementById("gachaButton");
+
+  if (solved < DAILY_TARGET) {
+    if (btn) btn.style.display = "none";
+    return;
   }
+
+  // 達成済み → ボタン存在確認・作成
+  if (!btn) {
+    btn = document.createElement("button");
+    btn.id = "gachaButton";
+    btn.innerHTML = `<img src="images/complete.png" alt="ガチャを引く！">`;
+    btn.onclick = openGacha;
+    imgPlaceholder.insertAdjacentElement("afterend", btn);
+  }
+
+  // チケット数で有効/無効
+  btn.style.display = "block";
+  btn.disabled = gachaTickets <= 0;
+  btn.style.opacity = gachaTickets > 0 ? "1" : "0.5";
+  btn.style.cursor = gachaTickets > 0 ? "pointer" : "not-allowed";
 }
 
 function openGacha() {
