@@ -14,6 +14,10 @@ const urlsToCache = [
   '/images/24h.png',
   '/images/complete.png',
   '/images/icon.png',
+  '/sounds/correct.mp3',
+  '/sounds/wrong.mp3',
+  '/sounds/complete.mp3',
+  '/sounds/gacha.mp3',
   // キャラ画像（全部入れるのが理想。最低限以下）
   '/images/characters/r1.png',
   '/images/characters/r2.png',

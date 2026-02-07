@@ -102,22 +102,39 @@ function answer(selected) {
 
     result.classList.add('correct');
 
-    if (solved === DAILY_TARGET) {
-      result.innerText = "🎉 目標達成！おめでとう！";
-      result.style.color = "#FFD700";
-    } else if (solved > DAILY_TARGET) {
-      result.innerText = "⭕ 正解！🎉";
-      result.style.color = "#10b981";
-      result.classList.add('bonus');
-    } else {
-      result.innerText = "⭕ 正解！";
-      result.style.color = "green";
+    // 正解音を再生
+    const audioCorrect = document.getElementById("soundCorrect");
+    if (audioCorrect) {
+        audioCorrect.currentTime = 0; // 最初から再生
+        audioCorrect.play().catch(e => console.log("音再生エラー:", e));
     }
-  } else {
-    result.innerText = `❌ 不正解 → ${current.a}`;
-    result.style.color = "red";
-    result.classList.add('wrong');
-  }
+
+    if (solved === DAILY_TARGET) {
+        const audioComplete = document.getElementById("soundComplete");
+        if (audioComplete) {
+        audioComplete.currentTime = 0;
+        audioComplete.play().catch(e => console.log("達成音エラー:", e));
+        }
+        result.innerText = "🎉 目標達成！おめでとう！";
+        result.style.color = "#FFD700";
+    } else if (solved > DAILY_TARGET) {
+        result.innerText = "⭕ 正解！🎉";
+        result.style.color = "#10b981";
+        result.classList.add('bonus');
+    } else {
+        result.innerText = "⭕ 正解！";
+        result.style.color = "green";
+    }
+    } else {
+        const audioWrong = document.getElementById("soundWrong");
+        if (audioWrong) {
+            audioWrong.currentTime = 0;
+            audioWrong.play().catch(e => console.log("不正解音エラー:", e));
+        }
+        result.innerText = `❌ 不正解 → ${current.a}`;
+        result.style.color = "red";
+        result.classList.add('wrong');
+    }
 
   document.querySelectorAll(".choiceBtn").forEach(b => b.disabled = true);
 
@@ -211,6 +228,13 @@ function openGacha() {
   if (gachaTickets <= 0) return;
   gachaTickets--;
   updateGachaButton();  // 即時反映
+
+  // ガチャ音を再生
+  const audioGacha = document.getElementById("soundGacha");
+  if (audioGacha) {
+    audioGacha.currentTime = 0;
+    audioGacha.play().catch(e => console.log("ガチャ音エラー:", e));
+  }
 
   const modal = document.getElementById("gachaModal");
   const resultArea = document.getElementById("gachaResult");
