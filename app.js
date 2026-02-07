@@ -1,10 +1,10 @@
 let words = [];
 let current = null;
 let answering = false;
-const DAILY_TARGET = 3;  // テスト用。本番は30に変更
+const DAILY_TARGET = 3;  // 本番では30に変更
 
 let characters = [];
-let gachaTickets = 0;    // ガチャチケット（引ける回数）
+let gachaTickets = 0;
 
 function todayKey() {
   return new Date().toDateString();
@@ -35,72 +35,22 @@ let solved = loadCount();
 fetch("characters.json")
   .then(r => r.json())
   .then(data => { characters = data; })
-  .catch(() => console.warn("characters.json 読み込み失敗"));
+  .catch(() => console.warn("characters.json load failed"));
 
-// ガチャ可能か判定 & ボタン更新
-function updateGachaButton() {
-  const placeholder = document.getElementById("warningImg");
-  if (!placeholder) return;
-
-  // 達成済みならガチャボタンに置き換え
-  if (solved >= DAILY_TARGET) {
-    let btn = document.getElementById("gachaButton");
-    if (!btn) {
-      btn = document.createElement("button");
-      btn.id = "gachaButton";
-      btn.innerHTML = `<img src="images/complete.png" alt="ガチャを引く！">`;
-      btn.onclick = openGacha;
-      placeholder.replaceWith(btn);
-    }
-    // チケットがあるときだけ有効
-    btn.disabled = gachaTickets <= 0;
-    btn.style.opacity = gachaTickets > 0 ? "1" : "0.5";
-  } else {
-    // 未達成なら通常の時間帯画像
-    // （既存のupdateWarningImage() で処理されるのでここでは何もしない）
-  }
-}
-
-function openGacha() {
-  if (gachaTickets <= 0) return;
-  gachaTickets--;
-  updateGachaButton();  // ボタン状態更新
-
-  const modal = document.getElementById("gachaModal");
-  const resultArea = document.getElementById("gachaResult");
-  resultArea.innerHTML = "";
-
-  for (let i = 0; i < 5; i++) {
-    const card = drawOneCharacter();
-    const div = document.createElement("div");
-    div.className = `gacha-card ${card.rarity}`;
-    div.innerHTML = `
-      <img src="${card.image}" alt="${card.name}">
-      <div class="name">${card.name}</div>
-    `;
-    resultArea.appendChild(div);
-  }
-
-  modal.style.display = "flex";
-}
-
-function drawOneCharacter() {
-  const rand = Math.random() * 100;
-  let rarity;
-  if (rand < 50) rarity = "rare";
-  else if (rand < 78) rarity = "super";
-  else if (rand < 93) rarity = "hyper";
-  else if (rand < 98) rarity = "ultra";
-  else rarity = "legend";
-
-  const candidates = characters.filter(c => c.rarity === rarity);
-  if (candidates.length === 0) return { name: "?", rarity: "rare", image: "" }; // フォールバック
-  return candidates[Math.floor(Math.random() * candidates.length)];
-}
-
-document.getElementById("closeGachaBtn").onclick = () => {
-  document.getElementById("gachaModal").style.display = "none";
-};
+// words.json 読み込み + 初回表示
+fetch("words.json")
+  .then(r => r.json())
+  .then(data => {
+    words = data;
+    next();
+    updateTimer();
+    updateWarningImage();
+    updateGachaButton();  // 初回チェック
+  })
+  .catch(err => {
+    console.error("Failed to load words.json", err);
+    document.getElementById("question").innerText = "単語データの読み込みに失敗しました";
+  });
 
 function next() {
   current = words[Math.floor(Math.random() * words.length)];
@@ -139,31 +89,30 @@ function answer(selected) {
   result.classList.remove('correct', 'wrong', 'bonus');
 
   if (isCorrect) {
+    const oldSolved = solved;
     solved++;
     saveCount(solved);
 
-    // ここでガチャチケットを管理
-    if (solved === DAILY_TARGET) {
+    // ガチャチケット付与
+    if (oldSolved < DAILY_TARGET && solved >= DAILY_TARGET) {
       gachaTickets += 1;
-      result.innerText = "🎉 目標達成！ガチャチケットGET！";
+    } else if (solved > DAILY_TARGET && (solved - DAILY_TARGET) % 10 === 0) {
+      gachaTickets += 1;
+    }
+
+    result.classList.add('correct');
+
+    if (solved === DAILY_TARGET) {
+      result.innerText = "🎉 目標達成！おめでとう！";
       result.style.color = "#FFD700";
     } else if (solved > DAILY_TARGET) {
       result.innerText = "⭕ 正解！🎉";
       result.style.color = "#10b981";
       result.classList.add('bonus');
-
-      // 10問ごと（オーバー分が10の倍数）にチケット追加
-      const over = solved - DAILY_TARGET;
-      if (over > 0 && over % 10 === 0) {
-        gachaTickets += 1;
-        result.innerText += " + ガチャチケット！";
-      }
     } else {
       result.innerText = "⭕ 正解！";
       result.style.color = "green";
     }
-
-    result.classList.add('correct');
   } else {
     result.innerText = `❌ 不正解 → ${current.a}`;
     result.style.color = "red";
@@ -185,107 +134,131 @@ function answer(selected) {
   }, 1400);
 }
 
-// updateWarningImage() を達成後はスキップするように修正
-function updateWarningImage() {
-  if (solved >= DAILY_TARGET) {
-    // 達成後はガチャボタンに任せるので画像更新不要
-    return;
-  }
+function updateBar() {
+  const pct = Math.min(100, (solved / DAILY_TARGET) * 100);
+  document.getElementById("bar").style.width = `${pct}%`;
 
-  const imgElement = document.getElementById("warningImg");
-  if (!imgElement) return;
-
-  const hour = new Date().getHours();
-  if (hour === lastWarningHour) return;
-
-  let imgPath = "";
-  if (hour >= 18) imgPath = "images/24h.png";
-  else if (hour >= 12) imgPath = "images/18h.png";
-  else if (hour >= 6) imgPath = "images/12h.png";
-  else imgPath = "images/6h.png";
-
-  if (imgElement.src.endsWith(imgPath)) return;
-
-  imgElement.src = imgPath;
-  lastWarningHour = hour;
-}
-
-// 他の関数（updateBar, secondsToMidnight, updateTimer など）は変更なし
-
-// 初回ロード部分を安全に強化
-fetch("words.json")
-  .then(r => {
-    if (!r.ok) throw new Error(`HTTP error! status: ${r.status}`);
-    return r.json();
-  })
-  .then(data => {
-    words = data;
-    if (words.length === 0) {
-      document.getElementById("question").innerText = "単語データが空です";
-      return;
-    }
-    next();
-    updateTimer();
-    updateWarningImage();
-    updateGachaButton();
-  })
-  .catch(err => {
-    console.error("words.json 読み込み失敗:", err);
-    document.getElementById("question").innerText = "単語データを読み込めませんでした\n（words.jsonを確認してください）";
-    // ここで最低限のUIを保つためにダミー問題を表示（任意）
-    document.getElementById("choices").innerHTML = "<p>データが読み込めないため、問題が出せません</p>";
-    updateBar();              // 進捗は表示
-    updateWarningImage();     // 時間帯画像は表示
-    updateGachaButton();      // ガチャボタンは条件次第
-  });
-
-// updateWarningImage() をさらに安全に（要素が存在するかチェック）
-function updateWarningImage() {
-  const imgElement = document.getElementById("warningImg");
-  if (!imgElement) return;  // 既にガチャボタンに置き換わっていたら何もしない
+  const progressText = document.getElementById("progressText");
+  progressText.innerText = `${solved} / ${DAILY_TARGET}`;
 
   if (solved >= DAILY_TARGET) {
-    return;  // 達成後はガチャボタン担当なのでスキップ
+    progressText.classList.add("over-achieved");
+    document.getElementById("bar").classList.add("bar-over");
+  } else {
+    progressText.classList.remove("over-achieved");
+    document.getElementById("bar").classList.remove("bar-over");
   }
-
-  const hour = new Date().getHours();
-  if (hour === lastWarningHour) return;
-
-  let imgPath = "";
-  if      (hour >= 18) imgPath = "images/24h.png";
-  else if (hour >= 12) imgPath = "images/18h.png";
-  else if (hour >=  6) imgPath = "images/12h.png";
-  else                 imgPath = "images/6h.png";
-
-  if (imgElement.src.endsWith(imgPath)) return;
-
-  imgElement.src = imgPath;
-  lastWarningHour = hour;
 }
 
-// updateGachaButton() をさらに頑丈に
-function updateGachaButton() {
+function secondsToMidnight() {
+  const now = new Date();
+  const tomorrow = new Date(now);
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  tomorrow.setHours(0, 0, 0, 0);
+  return Math.floor((tomorrow - now) / 1000);
+}
+
+function updateTimer() {
+  const s = secondsToMidnight();
+  const h = Math.floor(s / 3600);
+  const m = Math.floor((s % 3600) / 60);
+  const sec = s % 60;
+  document.getElementById("timer").innerText = `残り ${h}時間 ${m}分 ${sec}秒`;
+}
+
+let lastWarningHour = -1;
+
+function updateWarningImage() {
   const placeholder = document.getElementById("warningImg");
-  if (!placeholder) {
-    // 既に置き換わっている場合 → 既存ボタンの状態だけ更新
-    const existingBtn = document.getElementById("gachaButton");
-    if (existingBtn) {
-      existingBtn.disabled = gachaTickets <= 0;
-      existingBtn.style.opacity = gachaTickets > 0 ? "1" : "0.6";
-    }
-    return;
-  }
 
-  if (solved >= DAILY_TARGET) {
+  if (solved < DAILY_TARGET) {
+    const hour = new Date().getHours();
+    if (hour === lastWarningHour) return;
+
+    let imgPath = "";
+    if (hour >= 18) imgPath = "images/24h.png";
+    else if (hour >= 12) imgPath = "images/18h.png";
+    else if (hour >= 6) imgPath = "images/12h.png";
+    else imgPath = "images/6h.png";
+
+    placeholder.src = imgPath;
+    placeholder.style.display = "block";
+    lastWarningHour = hour;
+
+    const gachaBtn = document.getElementById("gachaButton");
+    if (gachaBtn) gachaBtn.style.display = "none";
+  } else {
+    placeholder.style.display = "none";
+
     let btn = document.getElementById("gachaButton");
     if (!btn) {
       btn = document.createElement("button");
       btn.id = "gachaButton";
       btn.innerHTML = `<img src="images/complete.png" alt="ガチャを引く！">`;
       btn.onclick = openGacha;
-      placeholder.replaceWith(btn);
+      placeholder.insertAdjacentElement("afterend", btn);
     }
-    btn.disabled = gachaTickets <= 0;
-    btn.style.opacity = gachaTickets > 0 ? "1" : "0.6";
+    btn.style.display = "block";
   }
 }
+
+function updateGachaButton() {
+  // チケットがあるかでボタンの有効/無効を切り替え（視覚的に）
+  const btn = document.getElementById("gachaButton");
+  if (btn) {
+    if (gachaTickets > 0) {
+      btn.disabled = false;
+      btn.style.opacity = "1";
+      btn.style.cursor = "pointer";
+    } else {
+      btn.disabled = true;
+      btn.style.opacity = "0.5";
+      btn.style.cursor = "not-allowed";
+    }
+  }
+}
+
+function openGacha() {
+  if (gachaTickets <= 0) return;
+  gachaTickets--;
+  updateGachaButton();  // 即時反映
+
+  const modal = document.getElementById("gachaModal");
+  const resultArea = document.getElementById("gachaResult");
+  resultArea.innerHTML = "";
+
+  for (let i = 0; i < 5; i++) {
+    const card = drawOneCharacter();
+    const div = document.createElement("div");
+    div.className = `gacha-card ${card.rarity}`;
+    div.innerHTML = `
+      <img src="${card.image}" alt="${card.name}">
+      <div class="name">${card.name}</div>
+    `;
+    resultArea.appendChild(div);
+  }
+
+  modal.style.display = "flex";
+}
+
+function drawOneCharacter() {
+  const rand = Math.random() * 100;
+  let rarity;
+  if (rand < 50) rarity = "rare";
+  else if (rand < 78) rarity = "super";
+  else if (rand < 93) rarity = "hyper";
+  else if (rand < 98) rarity = "ultra";
+  else rarity = "legend";
+
+  const candidates = characters.filter(c => c.rarity === rarity);
+  if (candidates.length === 0) return { name: "?", rarity: "rare", image: "" };
+  return candidates[Math.floor(Math.random() * candidates.length)];
+}
+
+// モーダル閉じる
+document.getElementById("closeGachaBtn").onclick = () => {
+  document.getElementById("gachaModal").style.display = "none";
+};
+
+// 1秒ごとのタイマー更新
+setInterval(updateTimer, 1000);
