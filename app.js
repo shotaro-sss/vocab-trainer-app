@@ -151,7 +151,7 @@ function answer(selected) {
             audioWrong.currentTime = 0;
             audioWrong.play().catch(e => console.log("不正解音エラー:", e));
         }
-        result.innerText = `❌ 不正解 → ${current.a}`;
+        result.innerText = `❌ ${current.q} → ${current.a}`;
         result.style.color = "red";
         result.classList.add('wrong');
     }
