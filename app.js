@@ -72,9 +72,9 @@ function answer(selected) {
       // 必要なら音やアニメーションをここで追加可能
       result.classList.add('correct');
     } else if (solved > DAILY_TARGET) {
-      result.innerText = "⭕ 正解！（今日の目標クリア済み）";
+      result.innerText = "⭕ 正解！🎉";
       result.style.color = "green";
-      result.classList.add('wrong');
+      result.classList.add('bonus');
     } else {
       result.innerText = "⭕ 正解！";
       result.style.color = "green";

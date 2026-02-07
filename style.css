@@ -180,6 +180,12 @@ hr {
   background: rgba(239, 68, 68, 0.1);
 }
 
+.bonus {
+  animation: correctAnim 0.6s ease;
+  border-color: var(--success) !important;
+  background: rgba(16, 185, 129, 0.1);
+}
+
 @keyframes correctAnim {
   0% { transform: scale(1); }
   50% { transform: scale(1.08); }
