@@ -326,17 +326,18 @@ function updateGachaHint() {
   const isSpecialTime = (solved % 50 === 0) && (solved >= 50);
 
   if (isSpecialTime) {
-    // 50回目の特別ガチャ中 → ヒントを完全に消す
+    // 50回目（特別確率アップ時）はヒント全体を非表示
     hintElement.style.display = "none";
   } else {
+    // 通常時は表示
     hintElement.style.display = "block";
+    
     document.getElementById("solvedCount").innerText = solved;
     
     const next = 50 - (solved % 50);
-    document.getElementById("toNextSpecial").innerText = 
-      next === 0 ? "今がチャンス！" : next;
+    document.getElementById("toNextSpecial").innerText = next === 0 ? "今がチャンス！" : next;
     
-    // 残り10回以内なら色を変えて目立たせる（オプション）
+    // 残り10回以内なら色を強調（オプション）
     hintElement.style.color = next <= 10 ? "#ec4899" : "#64748b";
   }
 }
