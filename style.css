@@ -321,55 +321,70 @@ hr {
   to   { transform: scale(1.08); }
 }
 
-/* 50回目特別ガチャ時のガチャボタンエフェクト */
+/* 50回目特別ガチャ時のガチャボタンエフェクト（回転なし版） */
 #gachaButton.special-gacha {
   position: relative;
-  animation: specialPulse 1.8s infinite ease-in-out;
-  filter: drop-shadow(0 0 15px #ec4899) drop-shadow(0 0 25px #a855f7);
+  animation: specialPulse 2s infinite ease-in-out;
+  filter: drop-shadow(0 0 20px #ec4899) drop-shadow(0 0 35px #a855f7);
 }
 
 #gachaButton.special-gacha img {
-  animation: rotateAndScale 4s infinite linear;
   border: 4px solid #ec4899;
-  box-shadow: 0 0 30px #ec4899, inset 0 0 20px #a855f7;
+  box-shadow: 0 0 40px #ec4899, inset 0 0 25px #a855f7;
+  transition: all 0.4s ease;
 }
 
+/* 脈動アニメ（scaleとopacityで優しく光る） */
 @keyframes specialPulse {
-  0%, 100% { transform: scale(1); opacity: 1; }
-  50%      { transform: scale(1.15); opacity: 0.9; }
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.12);
+    opacity: 0.92;
+  }
 }
 
-@keyframes rotateAndScale {
-  0%   { transform: rotate(0deg) scale(1); }
-  25%  { transform: rotate(90deg) scale(1.1); }
-  50%  { transform: rotate(180deg) scale(1); }
-  75%  { transform: rotate(270deg) scale(1.1); }
-  100% { transform: rotate(360deg) scale(1); }
-}
-
-/* キラキラ粒子（擬似） */
+/* キラキラ粒子（✨が浮かぶ） */
 #gachaButton.special-gacha::before,
-#gachaButton.special-gacha::after {
+#gachaButton.special-gacha::after,
+#gachaButton.special-gacha::after::before {
   content: "✨";
   position: absolute;
-  font-size: 2.5rem;
+  font-size: 2.8rem;
   color: #fbbf24;
   opacity: 0;
-  animation: sparkle 2.5s infinite;
   pointer-events: none;
+  animation: sparkle 3s infinite ease-in-out;
 }
 
 #gachaButton.special-gacha::before {
-  top: -20px; left: 30%;
-  animation-delay: 0.5s;
+  top: -30px;
+  left: 20%;
+  animation-delay: 0s;
 }
 
 #gachaButton.special-gacha::after {
-  bottom: -20px; right: 30%;
-  animation-delay: 1.2s;
+  bottom: -30px;
+  right: 20%;
+  animation-delay: 1s;
+}
+
+#gachaButton.special-gacha::after::before {
+  top: 50%;
+  left: -40px;
+  font-size: 2rem;
+  animation-delay: 1.8s;
 }
 
 @keyframes sparkle {
-  0%, 100% { opacity: 0; transform: scale(0.5) translateY(0); }
-  50%      { opacity: 1; transform: scale(1.3) translateY(-20px); }
+  0%, 100% {
+    opacity: 0;
+    transform: translateY(0) scale(0.8);
+  }
+  50% {
+    opacity: 0.9;
+    transform: translateY(-30px) scale(1.4);
+  }
 }
