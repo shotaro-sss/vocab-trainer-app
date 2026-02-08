@@ -333,7 +333,7 @@ function updateGachaHint() {
     // 通常時は表示
     hintElement.style.display = "block";
     
-    document.getElementById("solvedCount").innerText = solved;
+    // document.getElementById("solvedCount").innerText = solved;
     
     const next = 50 - (solved % 50);
     document.getElementById("toNextSpecial").innerText = next === 0 ? "今がチャンス！" : next;
