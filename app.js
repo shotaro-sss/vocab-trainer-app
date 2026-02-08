@@ -224,7 +224,7 @@ function updateWarningImage() {
   }
 }
 
-  function updateGachaButton() {
+function updateGachaButton() {
   const imgPlaceholder = document.getElementById("warningImg");
   let btn = document.getElementById("gachaButton");
 
@@ -256,22 +256,6 @@ function updateWarningImage() {
     btn.style.opacity = gachaTickets > 0 ? "1" : "0.5";
     btn.style.cursor = gachaTickets > 0 ? "pointer" : "not-allowed";
   }
-}
-
-  // 達成済み → ボタン存在確認・作成
-  if (!btn) {
-    btn = document.createElement("button");
-    btn.id = "gachaButton";
-    btn.innerHTML = `<img src="images/complete.png" alt="RESULT">`;
-    btn.onclick = openGacha;
-    imgPlaceholder.insertAdjacentElement("afterend", btn);
-  }
-
-  // チケット数で有効/無効
-  btn.style.display = "block";
-  btn.disabled = gachaTickets <= 0;
-  btn.style.opacity = gachaTickets > 0 ? "1" : "0.5";
-  btn.style.cursor = gachaTickets > 0 ? "pointer" : "not-allowed";
 }
 
 function openGacha() {
