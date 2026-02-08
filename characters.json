@@ -15,5 +15,7 @@
 
     {"id":401, "name":"スパイク", "rarity":"legend", "image":"images/characters/l1.png"},
     {"id":402, "name":"クロウ", "rarity":"legend", "image":"images/characters/l2.png"},
-    {"id":403, "name":"レオン", "rarity":"legend", "image":"images/characters/l3.png"}
+    {"id":403, "name":"レオン", "rarity":"legend", "image":"images/characters/l3.png"},
+    {"id":404, "name":"キット", "rarity":"legend", "image":"images/characters/l4.png"},
+    {"id":405, "name":"コーデリアス", "rarity":"legend", "image":"images/characters/l5.png"}
 ]
