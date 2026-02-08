@@ -93,6 +93,7 @@ function next() {
   updateBar();
   updateWarningImage();
   updateGachaButton();
+  updateGachaHint();
 }
 
 function answer(selected) {
@@ -223,7 +224,7 @@ function updateWarningImage() {
   }
 }
 
-function updateGachaButton() {
+  function updateGachaButton() {
   const imgPlaceholder = document.getElementById("warningImg");
   let btn = document.getElementById("gachaButton");
 
@@ -231,6 +232,31 @@ function updateGachaButton() {
     if (btn) btn.style.display = "none";
     return;
   }
+
+  if (!btn) {
+    btn = document.createElement("button");
+    btn.id = "gachaButton";
+    btn.innerHTML = `<img src="images/complete.png" alt="ガチャを引く！">`;
+    btn.onclick = openGacha;
+    imgPlaceholder.insertAdjacentElement("afterend", btn);
+  }
+
+  btn.style.display = "block";
+
+  const isSpecial = (solved % 50 === 0) && (solved >= 50);
+
+  if (isSpecial) {
+    btn.classList.add("special-gacha");
+    btn.disabled = gachaTickets <= 0;
+    btn.style.opacity = gachaTickets > 0 ? "1" : "0.6";
+    btn.style.cursor = gachaTickets > 0 ? "pointer" : "not-allowed";
+  } else {
+    btn.classList.remove("special-gacha");
+    btn.disabled = gachaTickets <= 0;
+    btn.style.opacity = gachaTickets > 0 ? "1" : "0.5";
+    btn.style.cursor = gachaTickets > 0 ? "pointer" : "not-allowed";
+  }
+}
 
   // 達成済み → ボタン存在確認・作成
   if (!btn) {
@@ -310,14 +336,24 @@ function drawOneCharacter() {
 }
 
 function updateGachaHint() {
-  document.getElementById("solvedCount").innerText = solved;
-  
-  if (solved >= 50) {
-    const next = 50 - (solved % 50);
-    document.getElementById("toNextSpecial").innerText = next === 0 ? "今がチャンス！" : next;
-    document.getElementById("gachaHint").style.color = next === 0 ? "#ec4899" : "#64748b";
+  const hintElement = document.getElementById("gachaHint");
+  if (!hintElement) return;
+
+  const isSpecialTime = (solved % 50 === 0) && (solved >= 50);
+
+  if (isSpecialTime) {
+    // 50回目の特別ガチャ中 → ヒントを完全に消す
+    hintElement.style.display = "none";
   } else {
-    document.getElementById("toNextSpecial").innerText = 50 - solved;
+    hintElement.style.display = "block";
+    document.getElementById("solvedCount").innerText = solved;
+    
+    const next = 50 - (solved % 50);
+    document.getElementById("toNextSpecial").innerText = 
+      next === 0 ? "今がチャンス！" : next;
+    
+    // 残り10回以内なら色を変えて目立たせる（オプション）
+    hintElement.style.color = next <= 10 ? "#ec4899" : "#64748b";
   }
 }
 
