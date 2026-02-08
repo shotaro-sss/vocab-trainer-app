@@ -21,6 +21,9 @@
     
     {"id":301, "name":"モーティス", "rarity":"ultra", "image":"images/characters/u1.png"},
     {"id":302, "name":"タラ", "rarity":"ultra", "image":"images/characters/u2.png"},
+    {"id":303, "name":"ジーン", "rarity":"ultra", "image":"images/characters/u3.png"},
+    {"id":304, "name":"MAX", "rarity":"ultra", "image":"images/characters/u4.png"},
+    {"id":305, "name":"ミスターP", "rarity":"ultra", "image":"images/characters/u5.png"},
 
     {"id":401, "name":"スパイク", "rarity":"legend", "image":"images/characters/l1.png"},
     {"id":402, "name":"クロウ", "rarity":"legend", "image":"images/characters/l2.png"},
