@@ -3,6 +3,7 @@
     {"id":2, "name":"コルト", "rarity":"rare", "image":"images/characters/r2.png"},
     {"id":3, "name":"ブル", "rarity":"rare", "image":"images/characters/r3.png"},
     {"id":4, "name":"ブロック", "rarity":"rare", "image":"images/characters/r4.png"},
+    {"id":5, "name":"エル・プリモ", "rarity":"rare", "image":"images/characters/r5.png"},
 
     {"id":101, "name":"ジェシー", "rarity":"super", "image":"images/characters/s1.png"},
     {"id":102, "name":"ダイナマイク", "rarity":"super", "image":"images/characters/s2.png"},
