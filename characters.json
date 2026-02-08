@@ -1,17 +1,19 @@
 [
     {"id":1, "name":"ニタ", "rarity":"rare", "image":"images/characters/r1.png"},
     {"id":2, "name":"コルト", "rarity":"rare", "image":"images/characters/r2.png"},
+    {"id":3, "name":"ブル", "rarity":"rare", "image":"images/characters/r3.png"},
+    {"id":4, "name":"ブロック", "rarity":"rare", "image":"images/characters/r4.png"},
 
-    {"id":3, "name":"ジェシー", "rarity":"super", "image":"images/characters/s1.png"},
-    {"id":4, "name":"ダイナマイク", "rarity":"super", "image":"images/characters/s2.png"},
+    {"id":101, "name":"ジェシー", "rarity":"super", "image":"images/characters/s1.png"},
+    {"id":102, "name":"ダイナマイク", "rarity":"super", "image":"images/characters/s2.png"},
 
-    {"id":5, "name":"ボウ", "rarity":"hyper", "image":"images/characters/h1.png"},
-    {"id":6, "name":"Emz", "rarity":"hyper", "image":"images/characters/h2.png"},
+    {"id":201, "name":"ボウ", "rarity":"hyper", "image":"images/characters/h1.png"},
+    {"id":202, "name":"Emz", "rarity":"hyper", "image":"images/characters/h2.png"},
 
-    {"id":7, "name":"モーティス", "rarity":"ultra", "image":"images/characters/u1.png"},
-    {"id":8, "name":"タラ", "rarity":"ultra", "image":"images/characters/u2.png"},
+    {"id":301, "name":"モーティス", "rarity":"ultra", "image":"images/characters/u1.png"},
+    {"id":302, "name":"タラ", "rarity":"ultra", "image":"images/characters/u2.png"},
 
-    {"id":9, "name":"スパイク", "rarity":"legend", "image":"images/characters/l1.png"},
-    {"id":10, "name":"クロウ", "rarity":"legend", "image":"images/characters/l2.png"},
-    {"id":11, "name":"レオン", "rarity":"legend", "image":"images/characters/l3.png"}
+    {"id":401, "name":"スパイク", "rarity":"legend", "image":"images/characters/l1.png"},
+    {"id":402, "name":"クロウ", "rarity":"legend", "image":"images/characters/l2.png"},
+    {"id":403, "name":"レオン", "rarity":"legend", "image":"images/characters/l3.png"}
 ]
