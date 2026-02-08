@@ -171,6 +171,7 @@ function answer(selected) {
         answering = false;
         next();
     }, timeoutDuration);
+    updateGachaHint();
 }
 
 function updateBar() {
@@ -187,6 +188,7 @@ function updateBar() {
     progressText.classList.remove("over-achieved");
     document.getElementById("bar").classList.remove("bar-over");
   }
+  updateGachaHint();
 }
 
 function secondsToMidnight() {
@@ -277,17 +279,46 @@ function openGacha() {
 }
 
 function drawOneCharacter() {
-  const rand = Math.random() * 100;
+  const isSpecial = (solved % 50 === 0) && (solved >= 50);  // 50, 100, 150... 正解達成時
+
+  let rand = Math.random() * 100;
   let rarity;
-  if (rand < 50) rarity = "rare";
-  else if (rand < 78) rarity = "super";
-  else if (rand < 93) rarity = "hyper";
-  else if (rand < 98) rarity = "ultra";
-  else rarity = "legend";
+
+  if (isSpecial) {
+    // 50正解ごとの特別確率（uとlを大幅アップ）
+    if (rand < 35)      rarity = "ultra";     // 通常5% → 35%
+    else if (rand < 55) rarity = "legend";    // 通常2% → 20%
+    else if (rand < 75) rarity = "hyper";     // 15% → 20%
+    else if (rand < 90) rarity = "super";     // 28% → 15%
+    else                rarity = "rare";      // 50% → 10%
+    
+    console.log(`特別ガチャ！ (正解${solved}回目)`);  // デバッグ用
+  } else {
+    // 通常確率
+    if (rand < 50) rarity = "rare";
+    else if (rand < 78) rarity = "super";
+    else if (rand < 93) rarity = "hyper";
+    else if (rand < 98) rarity = "ultra";
+    else rarity = "legend";
+  }
 
   const candidates = characters.filter(c => c.rarity === rarity);
-  if (candidates.length === 0) return { name: "?", rarity: "rare", image: "" };
+  if (candidates.length === 0) {
+    return { name: "?", rarity: "rare", image: "" };
+  }
   return candidates[Math.floor(Math.random() * candidates.length)];
+}
+
+function updateGachaHint() {
+  document.getElementById("solvedCount").innerText = solved;
+  
+  if (solved >= 50) {
+    const next = 50 - (solved % 50);
+    document.getElementById("toNextSpecial").innerText = next === 0 ? "今がチャンス！" : next;
+    document.getElementById("gachaHint").style.color = next === 0 ? "#ec4899" : "#64748b";
+  } else {
+    document.getElementById("toNextSpecial").innerText = 50 - solved;
+  }
 }
 
 // モーダル閉じる
