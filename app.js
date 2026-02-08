@@ -1,3 +1,4 @@
+// app.js
 let words = [];
 let current = null;
 let answering = false;
@@ -33,13 +34,13 @@ function saveCount(count) {
 let solved = loadCount();
 
 // characters.json 読み込み
-fetch("characters.json")
+fetch("./characters.json")
   .then(r => r.json())
   .then(data => { characters = data; })
   .catch(() => console.warn("characters.json load failed"));
 
 // words.json 読み込み + 初回表示
-fetch("words.json")
+fetch("./words.json")
   .then(r => r.json())
   .then(data => {
     words = data;
@@ -218,7 +219,7 @@ function updateWarningImage() {
     const hour = new Date().getHours();
     if (hour === lastWarningHour) return;
     let path = hour >= 18 ? "24h" : hour >= 12 ? "18h" : hour >= 6 ? "12h" : "6h";
-    img.src = `images/${path}.png`;
+    img.src = `./images/${path}.png`;
     img.style.display = "block";
     lastWarningHour = hour;
   }
@@ -236,7 +237,7 @@ function updateGachaButton() {
   if (!btn) {
     btn = document.createElement("button");
     btn.id = "gachaButton";
-    btn.innerHTML = `<img src="images/complete.png" alt="ガチャを引く！">`;
+    btn.innerHTML = `<img src="./images/complete.png" alt="ガチャを引く！">`;
     btn.onclick = openGacha;
     imgPlaceholder.insertAdjacentElement("afterend", btn);
   }
