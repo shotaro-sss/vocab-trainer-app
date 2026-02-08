@@ -11,5 +11,7 @@
     {"id":7, "name":"モーティス", "rarity":"ultra", "image":"images/characters/u1.png"},
     {"id":8, "name":"タラ", "rarity":"ultra", "image":"images/characters/u2.png"},
 
-    {"id":9, "name":"スパイク", "rarity":"legend", "image":"images/characters/l1.png"}
+    {"id":9, "name":"スパイク", "rarity":"legend", "image":"images/characters/l1.png"},
+    {"id":10, "name":"クロウ", "rarity":"legend", "image":"images/characters/l2.png"},
+    {"id":11, "name":"レオン", "rarity":"legend", "image":"images/characters/l3.png"}
 ]
